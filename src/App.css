@@ -189,6 +189,7 @@ h1 {
 .step-heading strong,
 .preview-label,
 .text-field > span,
+.text-field > label,
 .zoom-control > span {
   font-size: 12px;
   font-weight: 700;
@@ -292,7 +293,8 @@ h1 {
   margin-top: 18px;
 }
 
-.text-field > span {
+.text-field > span,
+.text-field > label {
   display: block;
   margin-bottom: 7px;
 }

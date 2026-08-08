@@ -250,7 +250,9 @@ function App() {
     const anchor = document.createElement('a')
     anchor.href = url
     anchor.download = `hh-goa-builder-${name.trim().toLowerCase().replace(/[^a-z0-9]+/g, '-') || 'id'}.png`
+    document.body.appendChild(anchor)
     anchor.click()
+    anchor.remove()
     window.setTimeout(() => URL.revokeObjectURL(url), 1000)
   }
 
@@ -336,10 +338,10 @@ function App() {
           <div className="step-heading details-heading"><span>02</span><div><strong>MAKE IT YOURS</strong><small>Keep it short. Keep it loud.</small></div></div>
           <label className="text-field"><span>NAME / ALIAS</span><input value={name} maxLength={24} placeholder="e.g. Anya" onChange={(event) => setName(event.target.value)} /></label>
           <label className="text-field"><span>STACK / ROLE</span><input value={role} maxLength={32} placeholder="e.g. Rust + robotics" onChange={(event) => setRole(event.target.value)} /></label>
-          <label className="text-field title-field">
-            <span>BUILDER TITLE</span>
-            <div><input value={builderTitle} maxLength={28} onChange={(event) => setBuilderTitle(event.target.value)} /><button type="button" onClick={randomizeTitle} aria-label="Generate another builder title" title="Generate another title"><RefreshCw size={20} /></button></div>
-          </label>
+          <div className="text-field title-field">
+            <label htmlFor="builder-title">BUILDER TITLE</label>
+            <div><input id="builder-title" value={builderTitle} maxLength={28} onChange={(event) => setBuilderTitle(event.target.value)} /><button type="button" onClick={randomizeTitle} aria-label="Generate another builder title" title="Generate another title"><RefreshCw size={20} /></button></div>
+          </div>
         </div>
 
         <div className="preview-column">
