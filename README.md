@@ -2,6 +2,8 @@
 
 A browser-based Builder ID generator for Hacker House Goa 2026. Upload a photo, add your name and role, generate a playful builder title, and export a share-ready `1200 x 1500` PNG.
 
+**Live app:** [hacker-house-1.vercel.app](https://hacker-house-1.vercel.app)
+
 The experience is designed around an illustrated Goan travel-poster aesthetic with a circular portrait, beach and sea scenery, palms, sunset, stickers, stamps, and ticket details.
 
 ## Features
