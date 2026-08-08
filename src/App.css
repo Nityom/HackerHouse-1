@@ -1,12 +1,12 @@
-@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Archivo+Black&family=Bangers&family=Space+Grotesk:wght@400;500;600;700&display=swap');
 
 :root {
-  --ink: #101114;
-  --paper: #f6f0df;
-  --blue: #0c38ed;
-  --coral: #ff5b42;
-  --acid: #c9ff45;
-  --muted: #ded7c5;
+  --ink: #052d25;
+  --paper: #f3ead2;
+  --blue: #052d25;
+  --coral: #ed2f70;
+  --acid: #f5b800;
+  --muted: #e5d9bd;
   font-family: 'Space Grotesk', 'Avenir Next', sans-serif;
   color: var(--ink);
   background: var(--paper);
@@ -27,10 +27,10 @@ body {
   min-width: 320px;
   min-height: 100vh;
   background:
-    linear-gradient(rgba(16, 17, 20, 0.045) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(16, 17, 20, 0.045) 1px, transparent 1px),
-    var(--paper);
-  background-size: 30px 30px;
+    radial-gradient(circle at 20% 10%, rgba(245, 184, 0, 0.13) 0 2px, transparent 3px),
+    radial-gradient(circle at 80% 60%, rgba(237, 47, 112, 0.12) 0 2px, transparent 3px),
+    var(--ink);
+  background-size: 34px 34px, 43px 43px, auto;
 }
 
 button,
@@ -54,17 +54,22 @@ a:focus-visible {
 }
 
 main {
-  width: min(100%, 1500px);
+  width: min(calc(100% - 36px), 1450px);
   min-height: 100vh;
   margin: 0 auto;
-  border-inline: 2px solid var(--ink);
-  background: rgba(246, 240, 223, 0.94);
+  border: 3px solid var(--acid);
+  border-top: 0;
+  background:
+    radial-gradient(rgba(5, 45, 37, 0.08) 0.8px, transparent 0.8px),
+    var(--paper);
+  background-size: 9px 9px;
+  box-shadow: 0 0 0 10px var(--ink);
 }
 
 .site-header {
   height: 88px;
   padding: 0 4.5vw;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -73,7 +78,7 @@ main {
 .wordmark {
   color: var(--ink);
   font-family: 'Archivo Black', 'Arial Black', sans-serif;
-  font-size: 26px;
+  font-size: 29px;
   text-decoration: none;
 }
 
@@ -92,7 +97,7 @@ main {
 
 .event-mark strong {
   padding: 8px 10px;
-  color: var(--acid);
+  color: var(--paper);
   background: var(--ink);
 }
 
@@ -100,18 +105,18 @@ main {
   position: relative;
   min-height: 360px;
   padding: 58px 4.5vw 50px;
-  border-bottom: 2px solid var(--ink);
+  border-bottom: 3px solid var(--ink);
   overflow: hidden;
 }
 
 .intro::after {
-  content: 'GOA';
+  content: 'GOA 2026';
   position: absolute;
   top: -35px;
   right: -25px;
-  color: var(--coral);
-  font-family: 'Archivo Black', 'Arial Black', sans-serif;
-  font-size: 300px;
+  color: var(--acid);
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 230px;
   line-height: 1;
   opacity: 0.14;
   pointer-events: none;
@@ -121,8 +126,8 @@ main {
   width: fit-content;
   margin: 0 0 20px;
   padding: 7px 10px;
-  color: var(--paper);
-  background: var(--blue);
+  color: var(--ink);
+  background: var(--acid);
   font-size: 12px;
   font-weight: 700;
 }
@@ -131,10 +136,17 @@ h1 {
   position: relative;
   z-index: 1;
   margin: 0;
-  font-family: 'Archivo Black', 'Arial Black', sans-serif;
+  font-family: 'Bangers', 'Archivo Black', sans-serif;
   font-size: clamp(62px, 8vw, 122px);
   line-height: 0.84;
-  letter-spacing: 0;
+  letter-spacing: 2px;
+  transform: rotate(-1deg);
+  transform-origin: left center;
+  text-shadow: 3px 3px 0 var(--paper), 5px 5px 0 var(--ink);
+}
+
+h1 span {
+  color: var(--coral);
 }
 
 .intro-copy {
@@ -147,6 +159,13 @@ h1 {
   font-size: 15px;
   font-weight: 600;
   line-height: 1.45;
+}
+
+.intro-copy strong {
+  color: var(--coral);
+  font-family: 'Bangers', 'Arial Black', sans-serif;
+  font-size: 24px;
+  letter-spacing: 1px;
 }
 
 .studio {
@@ -175,8 +194,8 @@ h1 {
   place-items: center;
   border: 2px solid var(--ink);
   border-radius: 50%;
-  color: var(--paper);
-  background: var(--ink);
+  color: var(--ink);
+  background: var(--acid);
   font-family: 'Archivo Black', 'Arial Black', sans-serif;
   font-size: 14px;
 }
@@ -218,7 +237,7 @@ h1 {
 }
 
 .upload-zone:hover {
-  background: var(--acid);
+  background: #f7df9b;
   transform: translate(-3px, -3px);
   box-shadow: 5px 5px 0 var(--ink);
 }
@@ -231,7 +250,7 @@ h1 {
   place-items: center;
   border-radius: 50%;
   color: var(--paper);
-  background: var(--blue);
+  background: var(--coral);
   font-size: 25px;
 }
 
@@ -306,7 +325,7 @@ h1 {
   border: 2px solid var(--ink);
   border-radius: 0;
   color: var(--ink);
-  background: #fffdf5;
+  background: #fff8e7;
   font-size: 16px;
   font-weight: 600;
 }
@@ -333,7 +352,32 @@ h1 {
 
 .preview-column {
   padding: 44px clamp(28px, 5vw, 78px) 58px;
-  background: var(--blue);
+  position: relative;
+  background:
+    radial-gradient(rgba(245, 184, 0, 0.16) 1px, transparent 1px),
+    var(--ink);
+  background-size: 16px 16px;
+  overflow: hidden;
+}
+
+.preview-column::before,
+.preview-column::after {
+  content: '✦';
+  position: absolute;
+  color: var(--acid);
+  font-size: 44px;
+  opacity: 0.55;
+}
+
+.preview-column::before {
+  top: 15px;
+  right: 18px;
+}
+
+.preview-column::after {
+  bottom: 18px;
+  left: 18px;
+  color: var(--coral);
 }
 
 .preview-label {
@@ -347,9 +391,11 @@ h1 {
   width: min(100%, 600px);
   margin: 0 auto;
   padding: 10px;
-  border: 2px solid var(--ink);
+  position: relative;
+  z-index: 1;
+  border: 3px solid var(--acid);
   background: var(--paper);
-  box-shadow: 12px 12px 0 var(--ink);
+  box-shadow: 12px 12px 0 #001d18;
 }
 
 canvas {
@@ -374,6 +420,8 @@ canvas:active {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 12px;
+  position: relative;
+  z-index: 1;
 }
 
 .actions button {
@@ -400,7 +448,8 @@ canvas:active {
 }
 
 .share-button {
-  background: var(--acid);
+  color: var(--paper);
+  background: var(--coral);
 }
 
 .share-note {
@@ -418,7 +467,7 @@ canvas:active {
 footer {
   min-height: 74px;
   padding: 0 4.5vw;
-  border-top: 2px solid var(--ink);
+  border-top: 3px solid var(--acid);
   display: flex;
   align-items: center;
   justify-content: space-between;

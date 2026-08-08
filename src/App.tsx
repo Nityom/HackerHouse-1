@@ -40,26 +40,272 @@ function drawCoverPhoto(
   position: PhotoPosition,
   zoom: number,
 ) {
-  const frame = { x: 72, y: 222, width: 1056, height: 780 }
-  const scale = Math.max(frame.width / image.width, frame.height / image.height) * zoom
+  const frame = { x: 600, y: 665, radius: 260 }
+  const diameter = frame.radius * 2
+  const scale = Math.max(diameter / image.width, diameter / image.height) * zoom
   const drawWidth = image.width * scale
   const drawHeight = image.height * scale
-  const overflowX = Math.max(0, drawWidth - frame.width)
-  const overflowY = Math.max(0, drawHeight - frame.height)
-  const drawX = frame.x - overflowX / 2 + position.x * (overflowX / 2)
-  const drawY = frame.y - overflowY / 2 + position.y * (overflowY / 2)
+  const overflowX = Math.max(0, drawWidth - diameter)
+  const overflowY = Math.max(0, drawHeight - diameter)
+  const drawX = frame.x - drawWidth / 2 + position.x * (overflowX / 2)
+  const drawY = frame.y - drawHeight / 2 + position.y * (overflowY / 2)
 
   context.save()
-  roundedRect(context, frame.x, frame.y, frame.width, frame.height, 18)
+  context.beginPath()
+  context.arc(frame.x, frame.y, frame.radius, 0, Math.PI * 2)
   context.clip()
   context.drawImage(image, drawX, drawY, drawWidth, drawHeight)
-
-  const shade = context.createLinearGradient(0, frame.y + 450, 0, frame.y + frame.height)
-  shade.addColorStop(0, 'rgba(8, 12, 18, 0)')
-  shade.addColorStop(1, 'rgba(8, 12, 18, .38)')
-  context.fillStyle = shade
-  context.fillRect(frame.x, frame.y, frame.width, frame.height)
   context.restore()
+}
+
+function drawSpark(context: CanvasRenderingContext2D, x: number, y: number, size: number, color: string) {
+  context.save()
+  context.translate(x, y)
+  context.fillStyle = color
+  context.beginPath()
+  context.moveTo(0, -size)
+  context.lineTo(size * 0.22, -size * 0.22)
+  context.lineTo(size, 0)
+  context.lineTo(size * 0.22, size * 0.22)
+  context.lineTo(0, size)
+  context.lineTo(-size * 0.22, size * 0.22)
+  context.lineTo(-size, 0)
+  context.lineTo(-size * 0.22, -size * 0.22)
+  context.closePath()
+  context.fill()
+  context.restore()
+}
+
+function drawPalm(context: CanvasRenderingContext2D, x: number, y: number, scale: number, color: string) {
+  context.save()
+  context.translate(x, y)
+  context.scale(scale, scale)
+  context.strokeStyle = color
+  context.fillStyle = color
+  context.lineWidth = 9
+  context.lineCap = 'round'
+  context.beginPath()
+  context.moveTo(0, 120)
+  context.quadraticCurveTo(-10, 55, 4, 0)
+  context.stroke()
+  for (let index = 0; index < 7; index += 1) {
+    const angle = -Math.PI * 0.92 + index * (Math.PI * 0.82 / 6)
+    context.save()
+    context.rotate(angle)
+    context.beginPath()
+    context.ellipse(40, 0, 44, 10, 0, 0, Math.PI * 2)
+    context.fill()
+    context.restore()
+  }
+  context.restore()
+}
+
+function drawBrushLabel(
+  context: CanvasRenderingContext2D,
+  text: string,
+  y: number,
+  width: number,
+  fill: string,
+  textColor: string,
+  fontSize: number,
+) {
+  const x = (CARD_WIDTH - width) / 2
+  context.fillStyle = fill
+  context.beginPath()
+  context.moveTo(x - 18, y + 13)
+  context.lineTo(x + 16, y)
+  context.lineTo(x + width - 8, y + 7)
+  context.lineTo(x + width + 20, y + 18)
+  context.lineTo(x + width - 3, y + 72)
+  context.lineTo(x + 12, y + 78)
+  context.closePath()
+  context.fill()
+  context.fillStyle = textColor
+  context.textAlign = 'center'
+  fitText(context, text, width - 60, fontSize)
+  context.fillText(text, CARD_WIDTH / 2, y + 59)
+  context.textAlign = 'left'
+}
+
+function drawSticker(
+  context: CanvasRenderingContext2D,
+  text: string,
+  x: number,
+  y: number,
+  width: number,
+  fill: string,
+  angle: number,
+) {
+  context.save()
+  context.translate(x, y)
+  context.rotate(angle)
+  context.fillStyle = '#052d25'
+  context.fillRect(6, 7, width, 48)
+  context.fillStyle = fill
+  context.beginPath()
+  context.moveTo(0, 4)
+  context.lineTo(width - 9, 0)
+  context.lineTo(width, 43)
+  context.lineTo(8, 49)
+  context.closePath()
+  context.fill()
+  context.fillStyle = fill === '#052d25' ? '#f3ead2' : '#052d25'
+  context.textAlign = 'center'
+  context.font = '900 25px "Arial Black", sans-serif'
+  context.fillText(text, width / 2, 35)
+  context.restore()
+  context.textAlign = 'left'
+}
+
+function drawSunset(context: CanvasRenderingContext2D, x: number, y: number) {
+  context.save()
+  context.beginPath()
+  context.rect(x - 92, y - 72, 184, 120)
+  context.clip()
+  context.fillStyle = '#f5b800'
+  context.beginPath()
+  context.arc(x, y, 53, Math.PI, 0)
+  context.fill()
+  context.strokeStyle = '#052d25'
+  context.lineWidth = 7
+  for (let line = 0; line < 5; line += 1) {
+    context.beginPath()
+    context.moveTo(x - 100, y + line * 17)
+    for (let point = 0; point <= 10; point += 1) {
+      context.lineTo(x - 100 + point * 20, y + line * 17 + (point % 2 ? 6 : 0))
+    }
+    context.stroke()
+  }
+  context.restore()
+}
+
+function drawBeachScene(
+  context: CanvasRenderingContext2D,
+  cream: string,
+  green: string,
+  pink: string,
+  yellow: string,
+) {
+  context.save()
+  roundedRect(context, 170, 402, 860, 535, 28)
+  context.clip()
+
+  const sky = context.createLinearGradient(0, 402, 0, 630)
+  sky.addColorStop(0, '#f7df9b')
+  sky.addColorStop(1, cream)
+  context.fillStyle = sky
+  context.fillRect(170, 402, 860, 245)
+
+  context.fillStyle = yellow
+  context.beginPath()
+  context.arc(835, 548, 86, Math.PI, 0)
+  context.fill()
+  context.strokeStyle = pink
+  context.lineWidth = 7
+  context.beginPath()
+  context.arc(835, 548, 99, Math.PI * 1.08, Math.PI * 1.92)
+  context.stroke()
+
+  context.fillStyle = '#157f7a'
+  context.fillRect(170, 548, 860, 285)
+  context.fillStyle = '#0b5f5a'
+  context.beginPath()
+  context.moveTo(170, 638)
+  for (let point = 0; point <= 18; point += 1) {
+    context.lineTo(170 + point * 50, 620 + (point % 2 ? 24 : 0))
+  }
+  context.lineTo(1030, 760)
+  context.lineTo(170, 760)
+  context.closePath()
+  context.fill()
+  context.fillStyle = green
+  context.beginPath()
+  context.moveTo(170, 724)
+  for (let point = 0; point <= 18; point += 1) {
+    context.lineTo(170 + point * 50, 705 + (point % 2 ? 18 : 0))
+  }
+  context.lineTo(1030, 842)
+  context.lineTo(170, 842)
+  context.closePath()
+  context.fill()
+
+  context.strokeStyle = cream
+  context.lineWidth = 8
+  context.lineCap = 'round'
+  for (let wave = 0; wave < 5; wave += 1) {
+    const waveY = 594 + wave * 58
+    context.beginPath()
+    for (let point = 0; point <= 20; point += 1) {
+      const waveX = 180 + point * 44
+      const y = waveY + Math.sin(point * 1.6 + wave) * 11
+      if (point === 0) context.moveTo(waveX, y)
+      else context.lineTo(waveX, y)
+    }
+    context.stroke()
+  }
+
+  context.fillStyle = '#e6c77f'
+  context.beginPath()
+  context.moveTo(170, 812)
+  context.quadraticCurveTo(390, 765, 590, 835)
+  context.quadraticCurveTo(825, 905, 1030, 802)
+  context.lineTo(1030, 937)
+  context.lineTo(170, 937)
+  context.closePath()
+  context.fill()
+  context.strokeStyle = cream
+  context.lineWidth = 12
+  context.beginPath()
+  context.moveTo(170, 810)
+  context.quadraticCurveTo(390, 767, 590, 834)
+  context.quadraticCurveTo(825, 900, 1030, 803)
+  context.stroke()
+
+  context.strokeStyle = green
+  context.fillStyle = cream
+  context.lineWidth = 5
+  context.beginPath()
+  context.moveTo(285, 540)
+  context.lineTo(285, 655)
+  context.stroke()
+  context.beginPath()
+  context.moveTo(287, 548)
+  context.lineTo(367, 620)
+  context.lineTo(287, 620)
+  context.closePath()
+  context.fill()
+  context.stroke()
+  context.fillStyle = pink
+  context.beginPath()
+  context.moveTo(260, 655)
+  context.lineTo(375, 655)
+  context.lineTo(350, 677)
+  context.lineTo(282, 677)
+  context.closePath()
+  context.fill()
+
+  context.save()
+  context.translate(943, 765)
+  context.rotate(0.2)
+  context.fillStyle = yellow
+  context.strokeStyle = green
+  context.lineWidth = 6
+  context.beginPath()
+  context.ellipse(0, 0, 30, 137, 0, 0, Math.PI * 2)
+  context.fill()
+  context.stroke()
+  context.strokeStyle = pink
+  context.beginPath()
+  context.moveTo(0, -100)
+  context.quadraticCurveTo(-18, 0, 0, 104)
+  context.stroke()
+  context.restore()
+
+  context.restore()
+  context.strokeStyle = green
+  context.lineWidth = 4
+  roundedRect(context, 170, 402, 860, 535, 28)
+  context.stroke()
 }
 
 function drawCard(
@@ -76,104 +322,216 @@ function drawCard(
 
   canvas.width = CARD_WIDTH
   canvas.height = CARD_HEIGHT
-  context.fillStyle = '#f6f0df'
+  const cream = '#f3ead2'
+  const green = '#052d25'
+  const pink = '#ed2f70'
+  const yellow = '#f5b800'
+  const ink = '#102b27'
+
+  context.fillStyle = green
   context.fillRect(0, 0, CARD_WIDTH, CARD_HEIGHT)
-
-  context.fillStyle = '#0c38ed'
-  context.fillRect(0, 0, CARD_WIDTH, 196)
-  context.fillStyle = '#ff5b42'
-  context.beginPath()
-  context.arc(1085, 98, 230, 0, Math.PI * 2)
+  context.fillStyle = cream
+  roundedRect(context, 26, 26, 1148, 1448, 70)
   context.fill()
-  context.fillStyle = '#c9ff45'
-  context.beginPath()
-  context.arc(1085, 98, 154, 0, Math.PI * 2)
-  context.fill()
+  context.strokeStyle = yellow
+  context.lineWidth = 6
+  roundedRect(context, 40, 40, 1120, 1420, 58)
+  context.stroke()
+  context.strokeStyle = green
+  context.lineWidth = 3
+  roundedRect(context, 53, 53, 1094, 1394, 48)
+  context.stroke()
 
-  context.fillStyle = '#f6f0df'
-  context.font = '900 54px "Arial Black", sans-serif'
-  context.fillText('HACKER HOUSE', 70, 86)
-  context.font = '700 30px "Arial Black", sans-serif'
-  context.fillText('GOA · 2026', 73, 137)
+  context.fillStyle = 'rgba(5, 45, 37, 0.18)'
+  for (let dot = 0; dot < 240; dot += 1) {
+    const x = 66 + ((dot * 83) % 1065)
+    const y = 62 + ((dot * 137) % 1370)
+    context.fillRect(x, y, dot % 5 === 0 ? 3 : 1.5, dot % 7 === 0 ? 3 : 1.5)
+  }
+
+  context.fillStyle = yellow
   context.save()
-  context.translate(992, 98)
-  context.rotate(-0.11)
-  context.fillStyle = '#101114'
-  context.font = '900 36px "Arial Black", sans-serif'
-  context.textAlign = 'center'
-  context.fillText('BUILDER', 0, -8)
-  context.fillText('PASS', 0, 38)
+  context.translate(928, 240)
+  context.rotate(-0.04)
+  context.fillRect(-125, -42, 250, 76)
   context.restore()
+
+  context.fillStyle = ink
+  context.textAlign = 'center'
+  context.font = '900 92px "Arial Black", sans-serif'
+  context.fillText('HACKER', 515, 190)
+  context.fillStyle = pink
+  context.font = '900 108px "Arial Black", sans-serif'
+  context.fillText('HOUSE', 535, 294)
+  context.fillStyle = ink
+  context.font = '900 78px "Arial Black", sans-serif'
+  context.save()
+  context.translate(915, 267)
+  context.rotate(-0.06)
+  context.fillText('GOA', 0, 0)
+  context.restore()
+  context.font = '600 27px "Avenir Next", sans-serif'
+  context.fillStyle = green
+  context.fillText('CODE · CONNECT · CHILL · REPEAT', 600, 342)
+  context.textAlign = 'left'
+
+  context.save()
+  context.translate(139, 150)
+  context.rotate(-0.09)
+  context.fillStyle = cream
+  context.strokeStyle = green
+  context.lineWidth = 9
+  context.fillRect(-72, -78, 154, 190)
+  context.strokeRect(-72, -78, 154, 190)
+  context.fillStyle = pink
+  context.font = '900 34px "Arial Black", sans-serif'
+  context.fillText('GOA', -52, -29)
+  context.fillStyle = ink
+  context.font = '800 21px "Arial Black", sans-serif'
+  context.fillText('INDIA', -51, 1)
+  drawPalm(context, 25, 10, 0.55, green)
+  context.restore()
+
+  context.save()
+  context.translate(1004, 150)
+  context.rotate(0.08)
+  context.strokeStyle = green
+  context.lineWidth = 4
+  context.beginPath()
+  context.arc(0, 0, 88, 0, Math.PI * 2)
+  context.stroke()
+  context.beginPath()
+  context.arc(0, 0, 70, 0, Math.PI * 2)
+  context.stroke()
+  context.fillStyle = green
+  context.textAlign = 'center'
+  context.font = '800 17px "Arial Black", sans-serif'
+  context.fillText('BUILT IN GOA', 0, -49)
+  drawPalm(context, 0, -4, 0.42, green)
+  context.font = '700 14px "Avenir Next", sans-serif'
+  context.fillText('SHIP FROM PARADISE', 0, 62)
+  context.restore()
+
+  drawBeachScene(context, cream, green, pink, yellow)
+
+  drawSpark(context, 266, 386, 17, yellow)
+  drawSpark(context, 950, 390, 15, pink)
+  drawSpark(context, 1080, 575, 13, yellow)
+  drawSpark(context, 120, 690, 13, pink)
+  drawPalm(context, 1044, 520, 1.05, green)
+  drawPalm(context, 102, 570, 0.78, green)
+
+  drawSticker(context, 'BUILD', 78, 760, 172, yellow, -0.09)
+  drawSticker(context, 'SHIP', 93, 820, 172, pink, 0.04)
+  drawSticker(context, 'REPEAT', 72, 880, 195, green, -0.04)
+  context.save()
+  context.translate(1016, 790)
+  context.rotate(0.08)
+  context.fillStyle = cream
+  context.strokeStyle = green
+  context.lineWidth = 5
+  roundedRect(context, -105, -67, 210, 134, 8)
+  context.fill()
+  context.stroke()
+  context.fillStyle = green
+  context.textAlign = 'center'
+  context.font = '900 25px "Arial Black", sans-serif'
+  context.fillText("LET'S BUILD", 0, -20)
+  context.fillText('SOMETHING', 0, 15)
+  context.fillStyle = pink
+  context.fillText('DOPE!', 0, 50)
+  context.restore()
+  context.fillStyle = pink
+  context.font = '900 55px monospace'
+  context.fillText('</>', 945, 930)
+  drawSunset(context, 107, 1268)
+
+  context.fillStyle = yellow
+  context.beginPath()
+  context.arc(600, 665, 281, 0, Math.PI * 2)
+  context.fill()
+  context.fillStyle = pink
+  context.beginPath()
+  context.arc(600, 665, 270, 0, Math.PI * 2)
+  context.fill()
+  context.fillStyle = '#dedede'
+  context.beginPath()
+  context.arc(600, 665, 258, 0, Math.PI * 2)
+  context.fill()
 
   if (photo) {
     drawCoverPhoto(context, photo, position, zoom)
   } else {
-    context.fillStyle = '#d8d1c0'
-    roundedRect(context, 72, 222, 1056, 780, 18)
+    context.fillStyle = '#747474'
+    context.beginPath()
+    context.arc(600, 610, 88, 0, Math.PI * 2)
     context.fill()
-    context.strokeStyle = '#101114'
-    context.lineWidth = 4
-    context.setLineDash([18, 16])
-    roundedRect(context, 108, 258, 984, 708, 8)
-    context.stroke()
-    context.setLineDash([])
-    context.fillStyle = '#101114'
+    context.beginPath()
+    context.moveTo(430, 820)
+    context.quadraticCurveTo(445, 685, 535, 670)
+    context.quadraticCurveTo(600, 735, 665, 670)
+    context.quadraticCurveTo(755, 685, 770, 820)
+    context.quadraticCurveTo(600, 900, 430, 820)
+    context.fill()
+    context.fillStyle = ink
     context.textAlign = 'center'
-    context.font = '900 54px "Arial Black", sans-serif'
-    context.fillText('YOUR FACE GOES HERE', 600, 600)
-    context.font = '500 27px "Avenir Next", sans-serif'
-    context.fillText('Portrait, landscape, off-centre - all welcome.', 600, 656)
+    context.font = '800 24px "Avenir Next", sans-serif'
+    context.fillText('ADD YOUR PHOTO', 600, 900)
     context.textAlign = 'left'
   }
 
-  context.fillStyle = '#101114'
-  context.fillRect(0, 1028, CARD_WIDTH, 472)
-  context.fillStyle = '#c9ff45'
-  context.font = '800 24px "Avenir Next", sans-serif'
-  context.fillText('NAME / ALIAS', 72, 1084)
-
   const displayName = (name.trim() || 'YOUR NAME').toUpperCase()
-  context.fillStyle = '#f6f0df'
-  fitText(context, displayName, 1040, 100)
-  context.fillText(displayName, 68, 1182)
-
-  context.strokeStyle = '#f6f0df'
-  context.globalAlpha = 0.28
-  context.lineWidth = 2
-  context.beginPath()
-  context.moveTo(72, 1228)
-  context.lineTo(1128, 1228)
-  context.stroke()
-  context.globalAlpha = 1
-
-  context.fillStyle = '#ff5b42'
-  context.font = '800 22px "Avenir Next", sans-serif'
-  context.fillText('BUILDING WITH', 72, 1284)
-  context.fillStyle = '#f6f0df'
   const displayRole = (role.trim() || 'FULL-STACK CURIOSITY').toUpperCase()
-  fitText(context, displayRole, 610, 39)
-  context.fillText(displayRole, 72, 1333)
+  drawBrushLabel(context, displayName, 948, 650, green, cream, 64)
+  drawBrushLabel(context, displayRole, 1034, 510, yellow, ink, 33)
 
-  context.fillStyle = '#0c38ed'
-  roundedRect(context, 744, 1251, 384, 112, 8)
+  context.fillStyle = 'rgba(243, 234, 210, 0.96)'
+  context.strokeStyle = pink
+  context.lineWidth = 3
+  roundedRect(context, 165, 1135, 870, 190, 26)
   context.fill()
-  context.fillStyle = '#c9ff45'
-  context.font = '700 18px "Avenir Next", sans-serif'
-  context.fillText('OFFICIAL BUILDER TITLE', 771, 1285)
-  context.fillStyle = '#f6f0df'
-  fitText(context, title, 330, 31)
-  context.fillText(title.toUpperCase(), 771, 1334)
+  context.stroke()
+  context.fillStyle = pink
+  context.beginPath()
+  context.arc(215, 1192, 27, 0, Math.PI * 2)
+  context.fill()
+  context.fillStyle = green
+  context.font = '800 18px "Avenir Next", sans-serif'
+  context.fillText('BUILDER TITLE', 260, 1185)
+  context.font = '900 29px "Arial Black", sans-serif'
+  context.fillText(title.toUpperCase(), 260, 1225)
+  context.fillStyle = yellow
+  context.beginPath()
+  context.arc(215, 1270, 27, 0, Math.PI * 2)
+  context.fill()
+  context.fillStyle = green
+  context.font = '800 18px "Avenir Next", sans-serif'
+  context.fillText('BASE CAMP', 260, 1263)
+  context.font = '900 29px "Arial Black", sans-serif'
+  context.fillText('GOA, INDIA · 2026', 260, 1303)
 
-  context.fillStyle = '#f6f0df'
-  context.font = '600 20px "Avenir Next", sans-serif'
-  context.fillText('#FrameInGoa', 72, 1438)
+  drawPalm(context, 1000, 1190, 0.7, green)
+  context.fillStyle = green
+  context.fillRect(65, 1364, 1070, 3)
+  context.fillStyle = pink
+  context.save()
+  context.translate(600, 1408)
+  context.rotate(-0.025)
+  context.fillRect(-275, -35, 550, 65)
+  context.fillStyle = green
+  context.textAlign = 'center'
+  context.font = '900 32px "Arial Black", sans-serif'
+  context.fillText('#FRAMEINGOA', 0, 10)
+  context.restore()
+  context.fillStyle = green
   context.textAlign = 'right'
-  context.fillText('15.046° N  ·  73.922° E', 1128, 1438)
-  context.textAlign = 'left'
-  for (let index = 0; index < 12; index += 1) {
-    context.fillStyle = index % 3 === 0 ? '#ff5b42' : '#f6f0df'
-    context.fillRect(465 + index * 22, 1418, index % 2 === 0 ? 8 : 14, 26)
+  context.font = '800 18px "Avenir Next", sans-serif'
+  context.fillText('BUILDER ID · HH-GOA-2026', 1110, 1440)
+  context.fillStyle = green
+  for (let bar = 0; bar < 18; bar += 1) {
+    context.fillRect(78 + bar * 8, 1392, bar % 3 === 0 ? 5 : 2, 40)
   }
+  context.textAlign = 'left'
 }
 
 function canvasBlob(canvas: HTMLCanvasElement) {
@@ -304,8 +662,8 @@ function App() {
 
       <section className="intro" id="top">
         <p className="eyebrow">HACKER HOUSE · GOA · 2026</p>
-        <h1>MAKE YOUR<br />BUILDER ID.</h1>
-        <p className="intro-copy">One photo. One badge. Zero forms to submit. Your image never leaves this device.</p>
+        <h1>MAKE YOUR<br /><span>BUILDER ID.</span></h1>
+        <p className="intro-copy"><strong>Code. Connect. Chill. Repeat.</strong><br />One photo, one badge, zero forms to submit. Your image never leaves this device.</p>
       </section>
 
       <section className="studio" aria-label="Builder ID generator">
