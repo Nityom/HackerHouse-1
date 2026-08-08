@@ -441,7 +441,7 @@ footer {
   }
 
   .intro {
-    min-height: 330px;
+    min-height: 0;
     padding: 42px 20px 35px;
   }
 
@@ -456,11 +456,13 @@ footer {
   }
 
   .intro-copy {
+    position: relative;
     right: auto;
-    bottom: 32px;
-    left: 20px;
-    width: calc(100% - 40px);
+    bottom: auto;
+    left: auto;
+    width: 100%;
     max-width: 370px;
+    margin-top: 26px;
   }
 
   .studio {
